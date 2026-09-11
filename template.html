@@ -87,11 +87,43 @@
   .what-lead h2{font-size:24px;font-weight:600;letter-spacing:-.015em;margin-bottom:8px}
   .what-lead p{font-size:15.5px;color:var(--text-secondary);line-height:1.6}
   .what-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-  .what-card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fafafc}
-  .what-card .k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;margin-bottom:8px}
-  .what-card h3{font-size:15px;font-weight:600;margin-bottom:6px}
-  .what-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.55}
-  @media (max-width:860px){.what-grid{grid-template-columns:1fr}}
+  .what-card{border:1px solid var(--line);border-radius:14px;padding:18px 18px 20px;background:#fafafc}
+  .what-card img{width:48px;height:48px;display:block;margin-bottom:12px}
+  .what-card .k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;margin-bottom:6px}
+  .what-card h3{font-size:15px;font-weight:600;margin-bottom:4px}
+  .what-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.5}
+  .what-card p b{color:var(--text-primary);font-weight:600}
+  /* flow diagram: your agent → CopilotKit → your users */
+  .flow{display:grid;grid-template-columns:minmax(0,1fr) 72px minmax(0,1.1fr) 72px minmax(0,1fr);align-items:center;gap:0;margin:0 0 22px;padding:18px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#fafafc,#f4f4fa)}
+  .node{border:1px solid var(--line);background:var(--surface-container);border-radius:14px;padding:14px 14px 12px;min-height:118px;box-shadow:var(--elevation-sm)}
+  .node-k{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:lowercase;margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chips span{font-size:11.5px;line-height:1;padding:5px 8px;border-radius:9999px;background:var(--primary-100);color:var(--text-primary)}
+  .chips .more{background:transparent;color:var(--text-disabled);border:1px dashed var(--border-container)}
+  .node.hub{text-align:center;background:var(--text-primary);color:var(--text-invert);border-color:var(--text-primary);padding:16px 14px 14px}
+  .node.hub img{display:block;margin:0 auto 8px;width:44px;height:44px}
+  .node.hub .node-k{color:var(--mint);font-size:13px;font-weight:600;text-transform:none;margin-bottom:2px}
+  .hub-sub{font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.7);margin-bottom:10px;text-transform:lowercase}
+  .hub-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+  .hub-tags span{font-size:11px;line-height:1;padding:5px 8px;border-radius:9999px;background:rgba(190,194,255,.18);color:var(--lilac)}
+  .link{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .wire{position:relative;display:block;width:100%;height:2px;background:linear-gradient(90deg,var(--lilac),var(--mint));border-radius:2px;overflow:visible}
+  .wire::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid var(--mint);border-right:0}
+  .pulse{position:absolute;top:-4px;left:0;width:10px;height:10px;border-radius:50%;background:var(--text-primary);animation:wirepulse 2.2s ease-in-out infinite}
+  .pulse.p2{animation-delay:1.1s}
+  @keyframes wirepulse{0%{left:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:calc(100% - 10px);opacity:0}}
+  .link .lbl{font-family:var(--mono);font-size:10.5px;color:var(--text-secondary);text-transform:lowercase}
+  @media (max-width:860px){
+    .what-grid{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr;gap:10px}
+    .link{flex-direction:row;height:40px;justify-content:center}
+    .wire{width:2px;height:100%;background:linear-gradient(180deg,var(--lilac),var(--mint))}
+    .wire::after{right:auto;left:-4px;top:auto;bottom:-1px;border:5px solid transparent;border-top:7px solid var(--mint);border-bottom:0}
+    .pulse{left:-4px;top:0;animation-name:wirepulse-v}
+    @keyframes wirepulse-v{0%{top:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 10px);opacity:0}}
+    .node{min-height:0}
+  }
+  @media (prefers-reduced-motion: reduce){.pulse{animation:none;opacity:0}}
   /* scene panel — the same little machines as the "what are you building" tiles */
   .panel{position:relative;container-type:size;aspect-ratio:4/3;border-radius:20px;overflow:hidden;box-shadow:var(--elevation-lg);
     background:radial-gradient(360px 200px at 78% 18%, rgba(190,194,255,.30), transparent 70%),linear-gradient(120deg,#010507 0%,#2b2b2b 55%,#010507 100%);
@@ -238,6 +270,8 @@
     .steps,.strip{grid-template-columns:1fr}
     .next{grid-template-columns:1fr}
     .next .ctas{justify-content:flex-start}
+    .dl-ask{grid-template-columns:1fr}
+    .dl-ask .pill{justify-self:start}
     .dock{gap:6px;padding:6px;bottom:12px;max-width:calc(100vw - 16px)}
     .dockbtn{height:40px;padding:0 12px}
     .dlabel{font-size:12.5px}
@@ -278,12 +312,33 @@
     <div class="what">
       <div class="what-lead">
         <h2>Connect any agent to any user.</h2>
-        <p>CopilotKit is the open-source frontend stack for AI agents. Teams use it to put an agent to work inside a real product — not in a chat window next to it. The agent reads what the user sees, renders real components, asks before it acts, and ships to Slack or Teams when that's where the work happens.</p>
+        <p>CopilotKit is the open-source frontend stack for AI agents: it puts an agent to work inside a real product, not in a chat window next to it.</p>
       </div>
+
+      <!-- the mechanism, drawn: your agent → CopilotKit → your users -->
+      <div class="flow" aria-label="Your agent, connected through CopilotKit to your users">
+        <div class="node">
+          <div class="node-k">your agent</div>
+          <div class="chips"><span>LangGraph</span><span>CrewAI</span><span>Mastra</span><span>Pydantic AI</span><span>Google ADK</span><span>Claude SDK</span><span>Agno</span><span>LlamaIndex</span><span>Strands</span><span class="more">or your own</span></div>
+        </div>
+        <div class="link" aria-hidden="true"><span class="wire"><i class="pulse"></i></span><span class="lbl">AG-UI</span></div>
+        <div class="node hub">
+          <img src="{{asset}}logo-mark.svg" alt="" width="44" height="44">
+          <div class="node-k">CopilotKit</div>
+          <div class="hub-sub">runtime · hooks · components</div>
+          <div class="hub-tags"><span>shared state</span><span>generative UI</span><span>frontend tools</span><span>human in the loop</span></div>
+        </div>
+        <div class="link" aria-hidden="true"><span class="wire"><i class="pulse p2"></i></span><span class="lbl">your app</span></div>
+        <div class="node">
+          <div class="node-k">your users</div>
+          <div class="chips"><span>React</span><span>Angular</span><span>Mobile</span><span>Slack</span><span>Teams</span></div>
+        </div>
+      </div>
+
       <div class="what-grid">
-        <div class="what-card"><div class="k">01 · Bring your agent</div><h3>Any framework</h3><p>LangGraph, CrewAI, Mastra, Pydantic AI, Google ADK, Claude SDK, Agno, LlamaIndex, Strands, or your own. CopilotKit speaks AG-UI, the open protocol it created, so the agent side stays yours.</p></div>
-        <div class="what-card"><div class="k">02 · Connect it to users</div><h3>Any frontend</h3><p>React, Angular, mobile, Slack, and Teams. Hooks and components for shared state, generative UI, frontend tools, and human-in-the-loop approvals — the pattern on this page is one of them.</p></div>
-        <div class="what-card"><div class="k">03 · Ship it safely</div><h3>Production-ready runtime</h3><p>Streaming, concurrency, retries, and state sync handled by the runtime. Open source with 37,000+ GitHub stars; a hosted runtime and enterprise support when you need them.</p></div>
+        <div class="what-card"><img src="{{asset}}icons/what-agent.svg" alt=""><div class="k">01 · bring your agent</div><h3>Any framework, unchanged</h3><p>CopilotKit speaks AG-UI, the open protocol it created. The agent side stays yours.</p></div>
+        <div class="what-card"><img src="{{asset}}icons/what-connect.svg" alt=""><div class="k">02 · connect it to users</div><h3>Inside your product</h3><p>Hooks and components for every pattern on this site. This page is one of them.</p></div>
+        <div class="what-card"><img src="{{asset}}icons/what-runtime.svg" alt=""><div class="k">03 · ship it safely</div><h3>Production-ready runtime</h3><p>Streaming, concurrency, retries, and state sync handled. Open source, <b>37,000+</b> GitHub stars.</p></div>
       </div>
     </div>
   </section>

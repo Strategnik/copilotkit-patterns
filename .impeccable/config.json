@@ -14,6 +14,12 @@
         "value": "0 0 14px rgba(190,194,255,.8)",
         "createdAt": "2026-09-11T16:49:36.741Z",
         "reason": "node glow inside the dark multi-agent mini-demo scene, carried over verbatim from CopilotKit's shipped what-are-you-building campaign page (their approved brand asset)"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "0 0 10px #fff",
+        "createdAt": "2026-09-11T16:55:39.578Z",
+        "reason": "white pulse dot travelling the links in the dark multi-agent mini-demo scene, carried over verbatim from CopilotKit's shipped what-are-you-building campaign page"
       }
     ]
   }

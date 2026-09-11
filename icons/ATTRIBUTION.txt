@@ -5,3 +5,6 @@ Icons via The Noun Project (API license):
 "chat bot" by Gung Yoga (Noun Project, id 8460221)
 "Workflow Approval" by Arkinasi (Noun Project, id 8453833)
 "question mark" by Muhammad Naufal Subhiansyah (Noun Project, id 8299629)
+"plug in" by Epic Icon Designs (Noun Project, id 8468468)
+"connect people" by hanis tusiyani (Noun Project, id 8056518)
+"shield with check" by Muhammad Fadli Rusady (Noun Project, id 8440928)
