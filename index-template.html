@@ -42,17 +42,38 @@
   h1 .grad{background:linear-gradient(90deg,rgba(190,194,255,.65),rgba(133,236,206,.7));background-repeat:no-repeat;background-size:100% .42em;background-position:0 92%;padding:0 .05em;border-radius:2px}
   .sub{font-size:17px;color:var(--text-secondary);line-height:1.6;max-width:560px;margin-bottom:36px}
   main{max-width:1040px}
-  .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;margin-bottom:8px}
+  .hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,44px);align-items:center;margin-bottom:8px}
   .sub b{color:var(--text-primary);font-weight:600}
   .proof{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--text-secondary);margin-top:-16px;margin-bottom:12px}
   .proof b{color:var(--text-primary);font-weight:600}
-  /* product shot: a short loop of the generative-UI demo, framed like a window */
-  .shot{margin:0;min-width:0}
-  .shot-video,.shot img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--line);box-shadow:var(--elevation-lg);background:var(--surface-container)}
-  .shot figcaption{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--text-secondary);text-transform:lowercase}
+  /* schematic: one hook on the left, the rendered component on the right, a request in between */
+  .schem{display:grid;grid-template-columns:minmax(0,1.45fr) 76px minmax(0,1fr);align-items:center;gap:0;min-width:0;padding-bottom:14px}
+  .schem-code{position:relative;background:#010507;color:#e8e8f0;border-radius:14px;padding:0 0 12px;box-shadow:var(--elevation-lg)}
+  .schem-head{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.55)}
+  .schem-head span{margin-right:auto}
+  .schem-head i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18)}
+  .schem-code pre{margin:0;padding:12px 14px 2px;font-family:var(--mono);font-size:10.5px;line-height:1.55;white-space:pre;overflow:hidden;position:relative;border-radius:0 0 14px 14px}
+  .schem-code pre code{display:block;overflow:hidden;white-space:pre}
+  .schem-code .k{color:#BEC2FF}.schem-code .s{color:#85ECCE}.schem-code .c{color:rgba(255,255,255,.4)}.schem-code .f{color:#FFF388}
+  /* typing: reveal the block line by line, hold, then restart with the render */
+  .schem-code pre code{animation:reveal 9s steps(1) infinite}
+  @keyframes reveal{0%,6%{max-height:3.1em}12%{max-height:4.65em}18%{max-height:7.75em}24%{max-height:9.3em}30%{max-height:10.85em}36%,100%{max-height:14em}}
+  .schem-tag{position:absolute;left:12px;bottom:-11px;font-family:var(--mono);font-size:10.5px;padding:4px 9px;border-radius:9999px;background:var(--text-primary);color:var(--mint);text-transform:lowercase;white-space:nowrap}
+  .schem-ui{position:relative}
+  .schem-ui img{display:block;width:100%;max-width:300px;margin:0 auto;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:var(--elevation-lg);background:var(--surface-container);animation:render 9s ease infinite}
+  @keyframes render{0%,40%{opacity:0;transform:translateY(8px) scale(.98)}52%,92%{opacity:1;transform:none}100%{opacity:0;transform:translateY(8px) scale(.98)}}
+  .schem-ui .schem-tag{background:var(--surface-container);color:#6430AB;border:1px solid var(--line);animation:render 9s ease infinite}
+  .schem-wire{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%}
+  .schem-wire i{display:block;width:100%;height:2px;background:linear-gradient(90deg,var(--lilac),var(--mint));border-radius:2px;position:relative}
+  .schem-wire i::before{content:"";position:absolute;left:0;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--text-primary);animation:travel 9s linear infinite}
+  @keyframes travel{0%,38%{left:0;opacity:0}40%{opacity:1}50%{left:calc(100% - 10px);opacity:1}52%,100%{left:calc(100% - 10px);opacity:0}}
+  .schem-wire .lbl{font-family:var(--mono);font-size:9.5px;color:var(--text-secondary);text-align:center;text-transform:lowercase;line-height:1.3}
+  .hero{margin-bottom:34px}
+  @media (max-width:760px){.schem{grid-template-columns:1fr;gap:26px;margin-top:8px}.schem-ui img{max-width:240px}.schem-wire{height:40px;flex-direction:row}.schem-wire i{width:2px;height:100%;background:linear-gradient(180deg,var(--lilac),var(--mint))}.schem-wire i::before{left:-4px;top:0;animation-name:travel-v}@keyframes travel-v{0%,38%{top:0;opacity:0}40%{opacity:1}50%{top:calc(100% - 10px);opacity:1}52%,100%{top:calc(100% - 10px);opacity:0}}}
+  @media (prefers-reduced-motion: reduce){.schem-code pre code,.schem-ui img,.schem-ui .schem-tag,.schem-wire i::before{animation:none!important;opacity:1;max-height:none;transform:none}}
   {{marquee_css}}
   .marquee-wrap{margin:0 0 36px}
-  @media (max-width:760px){.hero{grid-template-columns:1fr}.shot{order:-1}}
+  @media (max-width:760px){.hero{grid-template-columns:1fr}}
   .seclabel{display:flex;align-items:center;gap:8px;padding:0 4px;margin-bottom:12px}
   .seclabel span{font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);white-space:nowrap}
   .seclabel i{flex:1;height:1px;background:var(--border-container)}
@@ -107,13 +128,25 @@
       <p class="sub"><b>New here?</b> CopilotKit is the open-source frontend stack for AI agents: bring any agent, connect it to any user, inside your product. Each pattern below is a live demo, the code, and the guide.</p>
       <div class="proof"><span><b>37,000+</b> GitHub stars</span><span>Makers of <b>AG-UI</b></span><span>Open source</span></div>
     </div>
-    <figure class="shot">
-      <video class="shot-video" autoplay muted loop playsinline preload="metadata" poster="product/gallery-demo-poster.jpg" aria-label="CopilotKit demo: an agent rendering real components inside an app">
-        <source src="product/gallery-demo.webm" type="video/webm">
-        <source src="product/gallery-demo.mp4" type="video/mp4">
-      </video>
-      <figcaption>Generative UI, live: the agent answers with components, not paragraphs.</figcaption>
-    </figure>
+    <div class="schem" aria-label="A developer registers a component with one hook; the agent renders it inside the app">
+      <div class="schem-code">
+        <div class="schem-head"><span>app/page.tsx</span><i></i><i></i><i></i></div>
+        <pre><code><span class="k">import</span> { useComponent }
+  <span class="k">from</span> <span class="s">"@copilotkit/react-core/v2"</span>;
+
+<span class="f">useComponent</span>({
+  name: <span class="s">"show_weather"</span>,
+  parameters: weatherSchema,  <span class="c">// zod</span>
+  render: WeatherCard,         <span class="c">// React</span>
+});</code></pre>
+        <div class="schem-tag">you write this</div>
+      </div>
+      <div class="schem-wire" aria-hidden="true"><span class="lbl">agent call</span><i></i></div>
+      <div class="schem-ui">
+        <img src="product/weather-card.webp" alt="" width="640" height="470" loading="eager">
+        <div class="schem-tag">the agent renders this</div>
+      </div>
+    </div>
   </section>
 
   {{marquee_html}}
@@ -143,12 +176,6 @@
 </nav>
 
 <script>
-/* Demo loop: respect reduced motion (poster only) and don't run while off screen. */
-(function(){
-  const v=document.querySelector(".shot-video"); if(!v) return;
-  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){ v.removeAttribute("autoplay"); v.pause(); return; }
-  if("IntersectionObserver" in window){ new IntersectionObserver(([e])=>{ e.isIntersecting ? v.play().catch(()=>{}) : v.pause(); }).observe(v); }
-})();
 /* Measurement bridge — see template.html for the event contract. */
 const PATTERN = "index";
 const DEBUG = new URLSearchParams(location.search).get("debug") === "1";
