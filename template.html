@@ -211,6 +211,7 @@
   .consent-note a{color:var(--text-secondary)}
   .consent-note-plain{margin-top:8px}
   .declare[data-state="email"] .dl-email{display:block}
+  .declare[data-state="email"] #declareBtn,.declare[data-state="sending"] #declareBtn{display:none}
   .declare[data-state="done"] .dl-ask,.declare[data-state="done"] .dl-email{display:none}
   .declare[data-state="done"] .dl-done{display:block}
   .declare[data-state="done-ask-email"] .dl-ask{display:none}
@@ -532,6 +533,8 @@ function setDeclareState(s){ declare.dataset.state=s; }
 
 if(REGULATED){ document.getElementById("declareConsent").hidden=false; document.getElementById("declarePrivacy").hidden=true; }
 let declaredSilently=false;
+let declareClicked=false;      /* one click starts the background stitch; a second must not start another */
+let declareSubmitting=false;   /* one email submission in flight at a time (Enter bypasses pointer-events) */
 async function declareWithCookie(hutk){
   await submitDeclare("", hutk, false);
   declaredSilently=true;
@@ -541,6 +544,8 @@ async function declareWithCookie(hutk){
   setDeclareState("done-ask-email");
 }
 document.getElementById("declareBtn").addEventListener("click", async()=>{
+  if(declareClicked) return;
+  declareClicked=true;
   declareError.hidden=true;
   // The email field shows at once — nobody waits on a cookie. Outside GDPR, a visitor HubSpot
   // already knows is stitched in the background (the cookie can arrive up to ~2 s after load),
@@ -564,7 +569,10 @@ document.getElementById("declareForm").addEventListener("submit", async(ev)=>{
   if(!valid){ declareEmail.setAttribute("aria-invalid","true"); declareEmail.focus(); return; }
   declareEmail.removeAttribute("aria-invalid");
   declareError.hidden=true;
+  if(declareSubmitting) return;
+  declareSubmitting=true;
   const wasIdentified=declare.dataset.state==="done-ask-email";
+  document.getElementById("declareSend").disabled=true;
   setDeclareState("sending");
   try{
     const optIn = REGULATED ? document.getElementById("declareOptIn").checked : true;
@@ -578,6 +586,9 @@ document.getElementById("declareForm").addEventListener("submit", async(ev)=>{
     emitCampaignEvent("patterns_declare_failed",{identified:wasIdentified});
     setDeclareState(wasIdentified?"done-ask-email":"email");
     declareError.hidden=false;
+  }finally{
+    declareSubmitting=false;
+    document.getElementById("declareSend").disabled=false;
   }
 });
 
