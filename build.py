@@ -86,9 +86,11 @@ def main() -> None:
     # assets
     for name in ("logo-full.svg", "logo-mark.svg"):
         shutil.copy(HERE / name, out / name)
-    (out / "icons").mkdir(exist_ok=True)
-    for icon in (HERE / "icons").iterdir():
-        shutil.copy(icon, out / "icons" / icon.name)
+    for folder in ("icons", "logos", "anim", "vendor"):
+        (out / folder).mkdir(exist_ok=True)
+        for f in (HERE / folder).iterdir():
+            if f.is_file():
+                shutil.copy(f, out / folder / f.name)
 
     patterns = data["patterns"]
     score = data["scorecard"]

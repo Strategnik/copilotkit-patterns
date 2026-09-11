@@ -41,9 +41,25 @@
   h1{font-size:clamp(34px,6vw,56px);font-weight:600;letter-spacing:-.02em;line-height:1.12;margin-bottom:16px;text-wrap:balance;max-width:720px}
   h1 .grad{background:linear-gradient(90deg,rgba(190,194,255,.65),rgba(133,236,206,.7));background-repeat:no-repeat;background-size:100% .42em;background-position:0 92%;padding:0 .05em;border-radius:2px}
   .sub{font-size:17px;color:var(--text-secondary);line-height:1.6;max-width:560px;margin-bottom:36px}
-  .what{background:var(--surface-container);border:1px solid var(--line);border-left:4px solid var(--lilac);border-radius:0 16px 16px 0;padding:18px 22px;margin:-14px 0 32px;box-shadow:var(--elevation-sm);max-width:720px}
-  .what h2{font-size:17px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em}
-  .what p{font-size:14.5px;color:var(--text-secondary);line-height:1.6}
+  main{max-width:1040px}
+  .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;margin-bottom:8px}
+  .sub b{color:var(--text-primary);font-weight:600}
+  .proof{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--text-secondary);margin-top:-16px;margin-bottom:12px}
+  .proof b{color:var(--text-primary);font-weight:600}
+  /* the homepage hero animation: agent frameworks → CopilotKit / AG-UI → user channels */
+  .anim{position:relative;aspect-ratio:64/45;width:100%;min-width:0;overflow:hidden}
+  .anim .poster,.anim .lottie{position:absolute;left:-16%;top:-32%;width:132%;aspect-ratio:1/1;height:auto}
+  .anim .poster{object-fit:contain;transition:opacity .25s ease}
+  .anim .lottie{height:100%}
+  .anim.ready .poster{opacity:0}
+  .logos{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;align-items:center;padding:16px 20px;border:1px solid var(--line);border-radius:16px;background:var(--surface-container);box-shadow:var(--elevation-sm);margin:0 0 36px}
+  .logos-k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;white-space:nowrap}
+  .logos-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px}
+  .logos-row img{height:18px;width:auto;opacity:.8}
+  .logos-row.surfaces span{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--text-primary)}
+  .logos-row.surfaces img{height:18px;opacity:1}
+  @media (max-width:760px){.hero{grid-template-columns:1fr}.anim{order:-1;aspect-ratio:1/1}.anim .poster,.anim .lottie{left:-8%;top:-8%;width:116%}.logos{grid-template-columns:1fr;gap:6px 0}.logos-k{margin-top:6px}}
+  @media (prefers-reduced-motion: reduce){.anim .lottie{display:none}.anim.ready .poster{opacity:1}}
   .seclabel{display:flex;align-items:center;gap:8px;padding:0 4px;margin-bottom:12px}
   .seclabel span{font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);white-space:nowrap}
   .seclabel i{flex:1;height:1px;background:var(--border-container)}
@@ -91,13 +107,24 @@
 </header>
 
 <main>
-  <p class="eyebrow"><span>patterns</span><i></i><span>05 patterns · 01 scorecard</span></p>
-  <h1>Five patterns for <span class="grad">agent-native apps.</span></h1>
-  <p class="sub">Each one is a live demo you can run, the code behind it, and the guide that explains it. Pick the pattern you're building — the runtime is the same underneath.</p>
+  <section class="hero">
+    <div>
+      <p class="eyebrow"><span>patterns</span><i></i><span>05 patterns · 01 scorecard</span></p>
+      <h1>Five patterns for <span class="grad">agent-native apps.</span></h1>
+      <p class="sub"><b>New here?</b> CopilotKit is the open-source frontend stack for AI agents: bring any agent, connect it to any user, inside your product. Each pattern below is a live demo, the code, and the guide.</p>
+      <div class="proof"><span><b>37,000+</b> GitHub stars</span><span>Makers of <b>AG-UI</b></span><span>Open source</span></div>
+    </div>
+    <div class="anim" role="img" aria-label="CopilotKit and AG-UI connecting AI agent frameworks to user channels">
+      <img class="poster" src="anim/poster.png" alt="" width="1024" height="1024">
+      <div class="lottie" id="heroAnim" aria-hidden="true"></div>
+    </div>
+  </section>
 
-  <div class="what">
-    <h2>New here? CopilotKit is the open-source frontend stack for AI agents.</h2>
-    <p>You bring the agent — LangGraph, CrewAI, Mastra, Pydantic AI, Google ADK, Claude SDK, or your own — and CopilotKit connects it to the people using your app: React, Angular, mobile, Slack, and Teams. Shared state, generative UI, and human-in-the-loop approvals are built in, on a runtime that handles streaming, concurrency, and retries. Open source, 37,000+ GitHub stars, makers of the AG-UI protocol. The five patterns below are what it makes possible.</p>
+  <div class="logos" aria-label="Works with">
+    <div class="logos-k">any agent</div>
+    <div class="logos-row"><img src="logos/langgraph.svg" alt="LangGraph"><img src="logos/crewai.svg" alt="CrewAI"><img src="logos/mastra.svg" alt="Mastra"><img src="logos/pydantic.svg" alt="Pydantic AI"><img src="logos/google-adk.svg" alt="Google ADK"><img src="logos/agno.svg" alt="Agno"><img src="logos/llamaindex.svg" alt="LlamaIndex"><img src="logos/aws-strands.svg" alt="AWS Strands"><img src="logos/ms-agent-framework.svg" alt="Microsoft Agent Framework"></div>
+    <div class="logos-k">any user</div>
+    <div class="logos-row surfaces"><span><img src="logos/react.svg" alt="">React</span><span><img src="logos/angular.svg" alt="">Angular</span><span><img src="logos/slack.svg" alt="">Slack</span><span><img src="logos/teams.svg" alt="">Teams</span></div>
   </div>
 
   <div class="seclabel" aria-hidden="true"><span>What are you building?</span><i></i></div>
@@ -124,7 +151,17 @@
   </a>
 </nav>
 
+<script src="vendor/lottie_svg.min.js"></script>
 <script>
+/* Hero animation — the copilotkit.ai homepage Lottie, self-hosted; poster stays if it can't run. */
+(function(){
+  const el=document.getElementById("heroAnim");
+  const reduce=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(!el || !window.lottie || reduce) return;
+  const a=window.lottie.loadAnimation({container:el, renderer:"svg", loop:true, autoplay:true, path:"anim/hero-animation.json", assetsPath:"anim/", rendererSettings:{preserveAspectRatio:"xMidYMid meet", progressiveLoad:false}});
+  a.addEventListener("DOMLoaded", ()=>el.parentElement.classList.add("ready"));
+  if("IntersectionObserver" in window){ new IntersectionObserver(([e])=>{ e.isIntersecting ? a.play() : a.pause(); }).observe(el); }
+})();
 /* Measurement bridge — see template.html for the event contract. */
 const PATTERN = "index";
 const DEBUG = new URLSearchParams(location.search).get("debug") === "1";
