@@ -271,7 +271,7 @@
 <div class="bgfx" aria-hidden="true"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i></div>
 <header>
   <a href="https://www.copilotkit.ai" target="_top" aria-label="CopilotKit"><img src="{{asset}}logo-full.svg" alt="CopilotKit"></a>
-  <nav class="crumbs" aria-label="Breadcrumb"><a href="{{base}}/" target="_top" data-nav="index">patterns</a><span>/</span><b>{{idx}} · {{nav_title_lc}}</b></nav>
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="{{index_href}}" target="_top" data-nav="index">patterns</a><span>/</span><b>{{idx}} · {{nav_title_lc}}</b></nav>
 </header>
 
 <main>
@@ -467,8 +467,9 @@ const HUBSPOT_COOKIE_POLL_MS = 100;
 const demoMode = new URLSearchParams(location.search).get("demo") === "1";
 /* Consent regime, stamped on the parent page by the site layout (data-privacy-region):
    "gdpr" (EU/EEA/UK/CH), "ccpa" (California) or "none". Unknown → "gdpr" (fail closed).
-   Regulated visitors always type their email (no cookie stitching), see the consent block,
-   and their choice is recorded as cpk_marketing_consent + HubSpot's legal-consent payload. */
+   GDPR visitors always type their email (no cookie stitching); GDPR and CCPA visitors see the consent
+   block. Consent is recorded (cpk_marketing_consent + HubSpot's legal-consent payload) only on the
+   explicit email submit — never on the background cookie stitch, which the visitor did not read a notice for. */
 const MARKETING_SUBSCRIPTION_TYPE_ID = 311683862;   // HubSpot subscription "Marketing Information"
 function privacyRegime(){
   let v=null;
@@ -501,10 +502,10 @@ async function waitForHubspotCookie(){
   }
   return null;
 }
-async function submitDeclare(email, hutk, optIn){
+async function submitDeclare(email, hutk, optIn, {explicit=false}={}){
   const ctx=pageContext();
   const fields=[{objectTypeId:"0-1", name:"nurture_use_case", value:USE_CASE}];
-  fields.push({objectTypeId:"0-1", name:"cpk_marketing_consent", value: REGULATED ? (optIn ? "granted" : "declined") : "not_required"});
+  if(explicit) fields.push({objectTypeId:"0-1", name:"cpk_marketing_consent", value: REGULATED ? (optIn ? "granted" : "declined") : "not_required"});
   if(email) fields.push({objectTypeId:"0-1", name:"email", value:email});
   if(ctx.platform) fields.push({objectTypeId:"0-1", name:"cpk_paid_platform", value:ctx.platform});
   if(ctx.concept) fields.push({objectTypeId:"0-1", name:"cpk_paid_concept", value:ctx.concept});
@@ -512,7 +513,7 @@ async function submitDeclare(email, hutk, optIn){
   const context={pageUri:ctx.uri, pageName:document.title};
   if(hutk && !NO_STITCH) context.hutk=hutk;
   const body={fields, context};
-  if(REGULATED){
+  if(explicit && REGULATED){
     body.legalConsentOptions={consent:{
       consentToProcess:true,
       text:"I agree to allow CopilotKit to store and process my personal data to send me the requested links.",
@@ -552,7 +553,7 @@ document.getElementById("declareBtn").addEventListener("click", async()=>{
     if(!hutk || declare.dataset.state!=="email" || declareEmail.value.trim()) return;
     await declareWithCookie(hutk);
   }catch(e){
-    emitCampaignEvent("patterns_declare_failed",{identified:true});
+    emitCampaignEvent("patterns_declare_stitch_failed",{});   // background stitch only; the visitor saw nothing fail
   }
 });
 
@@ -567,7 +568,7 @@ document.getElementById("declareForm").addEventListener("submit", async(ev)=>{
   setDeclareState("sending");
   try{
     const optIn = REGULATED ? document.getElementById("declareOptIn").checked : true;
-    await submitDeclare(email, readHubspotCookie(), optIn);
+    await submitDeclare(email, readHubspotCookie(), optIn, {explicit:true});
     const consent = REGULATED ? (optIn ? "granted" : "declined") : "not_required";
     if(declaredSilently) emitCampaignEvent("patterns_declare_email_added",{regime:REGIME, marketing_consent:consent});
     else emitCampaignEvent("patterns_declared",{identified:wasIdentified, with_email:true, regime:REGIME, marketing_consent:consent});

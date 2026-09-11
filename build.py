@@ -96,7 +96,7 @@ def render(template: str, ctx: dict[str, str]) -> str:
 
 
 def pretty(base: str, slug: str | None) -> str:
-    return f"{base}/{slug}" if slug else f"{base}/"
+    return f"{base}/{slug}" if slug else (base or "/")   # no trailing slash: the site 308s /patterns/ → /patterns
 
 
 def main() -> None:
@@ -188,6 +188,7 @@ def main() -> None:
             "meta_desc": html.escape(p["meta_desc"]),
             "asset": args.asset,
             "base": base,
+            "index_href": pretty(base, None),
             "marquee_html": marquee(args.asset),
             "marquee_css": MARQUEE_CSS,
         }
