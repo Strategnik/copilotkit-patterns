@@ -93,15 +93,8 @@
   .what-card h3{font-size:15px;font-weight:600;margin-bottom:4px}
   .what-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.5}
   .what-card p b{color:var(--text-primary);font-weight:600}
-  /* what-top: lead + logos on the left, the homepage hero animation on the right */
-  .what-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:clamp(18px,3vw,36px);align-items:center;margin-bottom:18px}
-  .what-top .what-lead{margin-bottom:0}
   {{marquee_css}}
   .marquee-wrap{margin:0 0 22px}
-  /* product shot from copilotkit.ai for this pattern */
-  .shot{margin:0;min-width:0}
-  .shot img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:var(--elevation-lg);background:var(--surface-container)}
-  @media (max-width:860px){.what-top{grid-template-columns:1fr}}
   /* scene panel — the same little machines as the "what are you building" tiles */
   .panel{position:relative;container-type:size;aspect-ratio:4/3;border-radius:20px;overflow:hidden;box-shadow:var(--elevation-lg);
     background:radial-gradient(360px 200px at 78% 18%, rgba(190,194,255,.30), transparent 70%),linear-gradient(120deg,#010507 0%,#2b2b2b 55%,#010507 100%);
@@ -288,14 +281,9 @@
   <section id="what" aria-labelledby="what-title">
     <div class="seclabel"><span id="what-title">What CopilotKit is</span><i></i></div>
     <div class="what">
-      <div class="what-top">
-        <div class="what-lead">
-          <h2>Connect any agent to any user.</h2>
-          <p>CopilotKit is the open-source frontend stack for AI agents: it puts an agent to work inside a real product, not in a chat window next to it. Bring the agent you have; reach the people where they already are.</p>
-        </div>
-        <figure class="shot">
-          <img src="{{asset}}{{visual}}" alt="{{visual_alt}}" loading="lazy">
-        </figure>
+      <div class="what-lead">
+        <h2>Connect any agent to any user.</h2>
+        <p>CopilotKit is the open-source frontend stack for AI agents: it puts an agent to work inside a real product, not in a chat window next to it. Bring the agent you have; reach the people where they already are.</p>
       </div>
 
       {{marquee_html}}

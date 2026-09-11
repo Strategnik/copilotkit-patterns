@@ -186,8 +186,6 @@ def main() -> None:
             "meta_desc": html.escape(p["meta_desc"]),
             "asset": args.asset,
             "base": base,
-            "visual": p["visual"],
-            "visual_alt": html.escape(p["visual_alt"]),
             "marquee_html": marquee(args.asset),
             "marquee_css": MARQUEE_CSS,
         }
