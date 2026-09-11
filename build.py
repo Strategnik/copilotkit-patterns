@@ -35,6 +35,36 @@ SCENES = {
 }
 KEYWORDS = r"\b(import|from|const|new|return|await|async|export|default|function)\b"
 
+# The homepage animation's card frames double as the "works with" strips. 1–12 are agent
+# frameworks, 13–23 are user surfaces; 24/25 are the kite frame and the CopilotKit tile.
+AGENT_CARDS = [(1, "Microsoft Agent Framework"), (2, "AWS Strands"), (3, "Google ADK"), (4, "LangChain / LangGraph"),
+               (5, "CrewAI"), (6, "Agno"), (7, "Claude Agents SDK"), (8, "OpenAI Agents SDK"), (9, "Mastra"),
+               (10, "Pydantic AI"), (11, "LlamaIndex"), (12, "AG2")]
+USER_CARDS = [(13, "iOS"), (14, "Android"), (15, "Web"), (16, "SMS"), (17, "iMessage"), (18, "Telegram"),
+              (19, "WhatsApp"), (20, "Slack"), (21, "Discord"), (22, "Google Chat"), (23, "Microsoft Teams")]
+
+MARQUEE_CSS = """/* works-with strips: the animation's own cards, scrolling, edges faded */
+  .marquee-wrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;align-items:center}
+  .marquee-k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;white-space:nowrap}
+  .marquee{position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+  .marquee-track{display:flex;width:max-content;gap:0;animation:marquee-left 46s linear infinite}
+  .marquee.rtl .marquee-track{animation-name:marquee-right;animation-duration:40s}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .marquee-track img{height:64px;width:auto;display:block;flex:0 0 auto}
+  @keyframes marquee-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes marquee-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+  @media (max-width:640px){.marquee-wrap{grid-template-columns:1fr;gap:2px 0}.marquee-track img{height:56px}}
+  @media (prefers-reduced-motion: reduce){.marquee-track{animation:none}.marquee{-webkit-mask-image:none;mask-image:none;overflow-x:auto}}"""
+
+
+def marquee(asset: str) -> str:
+    def row(cards: list[tuple[int, str]], cls: str, label: str) -> str:
+        imgs = "".join(f'<img src="{asset}anim/{n}.png" alt="{name}" loading="lazy">' for n, name in cards)
+        dup = "".join(f'<img src="{asset}anim/{n}.png" alt="" aria-hidden="true" loading="lazy">' for n, _ in cards)
+        return (f'<div class="marquee-k">{label}</div>'
+                f'<div class="marquee {cls}" aria-label="{label}"><div class="marquee-track">{imgs}{dup}</div></div>')
+    return ('<div class="marquee-wrap">' + row(AGENT_CARDS, "ltr", "any agent") + row(USER_CARDS, "rtl", "any user") + "</div>")
+
 
 def highlight(code: str) -> str:
     """Tiny, dependency-free highlighter: comments, strings, keywords, call names."""
@@ -86,7 +116,7 @@ def main() -> None:
     # assets
     for name in ("logo-full.svg", "logo-mark.svg"):
         shutil.copy(HERE / name, out / name)
-    for folder in ("icons", "logos", "anim", "vendor"):
+    for folder in ("icons", "anim", "vendor"):
         (out / folder).mkdir(exist_ok=True)
         for f in (HERE / folder).iterdir():
             if f.is_file():
@@ -118,7 +148,8 @@ def main() -> None:
     # gallery
     tiles = "".join(tile(p, "", False) for p in patterns) + score_tile(False)
     (out / "index.html").write_text(
-        render(idx_tpl, {"asset": "", "tiles_html": tiles, "engineer_url": data["engineer_url"]})
+        render(idx_tpl, {"asset": "", "tiles_html": tiles, "engineer_url": data["engineer_url"],
+                         "marquee_html": marquee(""), "marquee_css": MARQUEE_CSS})
     )
 
     # pattern pages
@@ -155,6 +186,8 @@ def main() -> None:
             "meta_desc": html.escape(p["meta_desc"]),
             "asset": args.asset,
             "base": base,
+            "marquee_html": marquee(args.asset),
+            "marquee_css": MARQUEE_CSS,
         }
         d = out / p["slug"]
         d.mkdir(exist_ok=True)

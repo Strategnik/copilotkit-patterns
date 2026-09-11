@@ -94,13 +94,12 @@
   .what-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.5}
   .what-card p b{color:var(--text-primary);font-weight:600}
   /* what-top: lead + logos on the left, the homepage hero animation on the right */
-  .what-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:clamp(18px,3vw,36px);align-items:center;margin-bottom:22px}
+  .what-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:clamp(18px,3vw,36px);align-items:center;margin-bottom:18px}
+  .what-top .anim{aspect-ratio:5/4}
+  .what-top .anim .poster,.what-top .anim .lottie{width:118%;left:-9%;top:-16%}
   .what-top .what-lead{margin-bottom:0}
-  .logos-k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;margin:16px 0 8px}
-  .logos-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
-  .logos-row img{height:16px;width:auto;opacity:.8}
-  .logos-row.surfaces span{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text-primary)}
-  .logos-row.surfaces img{height:17px;opacity:1}
+  {{marquee_css}}
+  .marquee-wrap{margin:0 0 22px}
   .anim{position:relative;aspect-ratio:64/45;width:100%;min-width:0;overflow:hidden}
   .anim .poster,.anim .lottie{position:absolute;left:-11%;top:-22%;width:122%;aspect-ratio:1/1;height:auto}
   .anim .poster{object-fit:contain;transition:opacity .25s ease}
@@ -297,17 +296,15 @@
       <div class="what-top">
         <div class="what-lead">
           <h2>Connect any agent to any user.</h2>
-          <p>CopilotKit is the open-source frontend stack for AI agents: it puts an agent to work inside a real product, not in a chat window next to it.</p>
-          <div class="logos-k">any agent</div>
-          <div class="logos-row"><img src="{{asset}}logos/langgraph.svg" alt="LangGraph"><img src="{{asset}}logos/crewai.svg" alt="CrewAI"><img src="{{asset}}logos/mastra.svg" alt="Mastra"><img src="{{asset}}logos/pydantic.svg" alt="Pydantic AI"><img src="{{asset}}logos/google-adk.svg" alt="Google ADK"><img src="{{asset}}logos/agno.svg" alt="Agno"><img src="{{asset}}logos/llamaindex.svg" alt="LlamaIndex"><img src="{{asset}}logos/aws-strands.svg" alt="AWS Strands"></div>
-          <div class="logos-k">any user</div>
-          <div class="logos-row surfaces"><span><img src="{{asset}}logos/react.svg" alt="">React</span><span><img src="{{asset}}logos/angular.svg" alt="">Angular</span><span><img src="{{asset}}logos/slack.svg" alt="">Slack</span><span><img src="{{asset}}logos/teams.svg" alt="">Teams</span></div>
+          <p>CopilotKit is the open-source frontend stack for AI agents: it puts an agent to work inside a real product, not in a chat window next to it. Bring the agent you have; reach the people where they already are.</p>
         </div>
         <div class="anim" role="img" aria-label="CopilotKit and AG-UI connecting AI agent frameworks to user channels">
           <img class="poster" src="{{asset}}anim/poster.png" alt="" width="1024" height="1024">
           <div class="lottie" id="heroAnim" aria-hidden="true"></div>
         </div>
       </div>
+
+      {{marquee_html}}
 
       <div class="what-grid">
         <div class="what-card"><img src="{{asset}}icons/what-agent.svg" alt=""><div class="k">01 · bring your agent</div><h3>Any framework, unchanged</h3><p>CopilotKit speaks AG-UI, the open protocol it created. The agent side stays yours.</p></div>

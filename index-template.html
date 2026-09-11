@@ -52,13 +52,9 @@
   .anim .poster{object-fit:contain;transition:opacity .25s ease}
   .anim .lottie{height:100%}
   .anim.ready .poster{opacity:0}
-  .logos{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;align-items:center;padding:16px 20px;border:1px solid var(--line);border-radius:16px;background:var(--surface-container);box-shadow:var(--elevation-sm);margin:0 0 36px}
-  .logos-k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;white-space:nowrap}
-  .logos-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px}
-  .logos-row img{height:18px;width:auto;opacity:.8}
-  .logos-row.surfaces span{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--text-primary)}
-  .logos-row.surfaces img{height:18px;opacity:1}
-  @media (max-width:760px){.hero{grid-template-columns:1fr}.anim{order:-1;aspect-ratio:1/1}.anim .poster,.anim .lottie{left:-8%;top:-8%;width:116%}.logos{grid-template-columns:1fr;gap:6px 0}.logos-k{margin-top:6px}}
+  {{marquee_css}}
+  .marquee-wrap{margin:0 0 36px}
+  @media (max-width:760px){.hero{grid-template-columns:1fr}.anim{order:-1;aspect-ratio:1/1}.anim .poster,.anim .lottie{left:-8%;top:-8%;width:116%}}
   @media (prefers-reduced-motion: reduce){.anim .lottie{display:none}.anim.ready .poster{opacity:1}}
   .seclabel{display:flex;align-items:center;gap:8px;padding:0 4px;margin-bottom:12px}
   .seclabel span{font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);white-space:nowrap}
@@ -120,12 +116,7 @@
     </div>
   </section>
 
-  <div class="logos" aria-label="Works with">
-    <div class="logos-k">any agent</div>
-    <div class="logos-row"><img src="logos/langgraph.svg" alt="LangGraph"><img src="logos/crewai.svg" alt="CrewAI"><img src="logos/mastra.svg" alt="Mastra"><img src="logos/pydantic.svg" alt="Pydantic AI"><img src="logos/google-adk.svg" alt="Google ADK"><img src="logos/agno.svg" alt="Agno"><img src="logos/llamaindex.svg" alt="LlamaIndex"><img src="logos/aws-strands.svg" alt="AWS Strands"><img src="logos/ms-agent-framework.svg" alt="Microsoft Agent Framework"></div>
-    <div class="logos-k">any user</div>
-    <div class="logos-row surfaces"><span><img src="logos/react.svg" alt="">React</span><span><img src="logos/angular.svg" alt="">Angular</span><span><img src="logos/slack.svg" alt="">Slack</span><span><img src="logos/teams.svg" alt="">Teams</span></div>
-  </div>
+  {{marquee_html}}
 
   <div class="seclabel" aria-hidden="true"><span>What are you building?</span><i></i></div>
   <div class="grid">{{tiles_html}}</div>
