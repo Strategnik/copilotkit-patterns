@@ -195,6 +195,12 @@
   .dl-hint{font-size:12.5px;color:var(--text-disabled);margin-top:8px}
   .dl-done h2{margin-bottom:4px}
   .dl-error{margin-top:14px;font-size:13.5px;color:var(--text-primary);font-weight:600}
+  .consent{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-container)}
+  .consent-row{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--text-primary);cursor:pointer}
+  .consent-row input{margin-top:3px;width:16px;height:16px;accent-color:#6430AB;flex:0 0 auto}
+  .consent-note{margin-top:8px;font-size:12px;color:var(--text-disabled);line-height:1.5}
+  .consent-note a{color:var(--text-secondary)}
+  .consent-note-plain{margin-top:8px}
   .declare[data-state="email"] .dl-email{display:block}
   .declare[data-state="done"] .dl-ask,.declare[data-state="done"] .dl-email{display:none}
   .declare[data-state="done"] .dl-done{display:block}
@@ -328,7 +334,12 @@
           <input id="declareEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@company.com" maxlength="320" aria-describedby="declareHint">
           <button class="pill" id="declareSend" type="submit">Send it</button>
         </div>
-        <p class="dl-hint" id="declareHint">One email with the links. No sequence beyond what you ask for.</p>
+        <p class="dl-hint" id="declareHint">One email with the links.</p>
+        <div class="consent" id="declareConsent" hidden>
+          <label class="consent-row"><input type="checkbox" id="declareOptIn"> <span>Also send me follow-ups about this pattern from CopilotKit. Unsubscribe anytime.</span></label>
+          <p class="consent-note">By sending, you agree that CopilotKit stores your email to deliver these links. <a href="https://www.copilotkit.ai/privacy-policy" target="_top">Privacy policy</a>.</p>
+        </div>
+        <p class="consent-note consent-note-plain" id="declarePrivacy"><a href="https://www.copilotkit.ai/privacy-policy" target="_top">Privacy policy</a></p>
       </form>
       <div class="dl-done" id="declareDone" role="status" aria-live="polite">
         <h2>Got it.</h2>
@@ -429,6 +440,18 @@ const USE_CASE = "{{use_case}}";
 const HUBSPOT_COOKIE_WAIT_MS = 2000;
 const HUBSPOT_COOKIE_POLL_MS = 100;
 const demoMode = new URLSearchParams(location.search).get("demo") === "1";
+/* Consent regime, stamped on the parent page by the site layout (data-privacy-region):
+   "gdpr" (EU/EEA/UK/CH), "ccpa" (California) or "none". Unknown → "gdpr" (fail closed).
+   Regulated visitors always type their email (no cookie stitching), see the consent block,
+   and their choice is recorded as cpk_marketing_consent + HubSpot's legal-consent payload. */
+const MARKETING_SUBSCRIPTION_TYPE_ID = 311683862;   // HubSpot subscription "Marketing Information"
+function privacyRegime(){
+  let v=null;
+  try{ v=(window.parent!==window ? window.parent.document : document).documentElement.getAttribute("data-privacy-region"); }catch(e){}
+  return (v==="ccpa" || v==="none") ? v : "gdpr";
+}
+const REGIME = privacyRegime();
+const REGULATED = REGIME !== "none";
 
 function pageContext(){
   let search=location.search, path=location.pathname, uri=location.href;
@@ -452,18 +475,26 @@ async function waitForHubspotCookie(){
   }
   return null;
 }
-async function submitDeclare(email, hutk){
+async function submitDeclare(email, hutk, optIn){
   const ctx=pageContext();
   const fields=[{objectTypeId:"0-1", name:"nurture_use_case", value:USE_CASE}];
+  fields.push({objectTypeId:"0-1", name:"cpk_marketing_consent", value: REGULATED ? (optIn ? "granted" : "declined") : "not_required"});
   if(email) fields.push({objectTypeId:"0-1", name:"email", value:email});
   if(ctx.platform) fields.push({objectTypeId:"0-1", name:"cpk_paid_platform", value:ctx.platform});
   if(ctx.concept) fields.push({objectTypeId:"0-1", name:"cpk_paid_concept", value:ctx.concept});
   fields.push({objectTypeId:"0-1", name:"cpk_last_landing_page", value:ctx.path.slice(0,200)});
   const context={pageUri:ctx.uri, pageName:document.title};
-  if(hutk) context.hutk=hutk;
+  if(hutk && !REGULATED) context.hutk=hutk;
+  const body={fields, context};
+  if(REGULATED){
+    body.legalConsentOptions={consent:{
+      consentToProcess:true,
+      text:"I agree to allow CopilotKit to store and process my personal data to send me the requested links.",
+      communications:[{value:!!optIn, subscriptionTypeId:MARKETING_SUBSCRIPTION_TYPE_ID, text:"I agree to receive marketing information from CopilotKit."}]}};
+  }
   if(demoMode) return;
   const r=await fetch(`https://api-na2.hsforms.com/submissions/v3/integration/submit/${PORTAL_ID}/${DECLARE_FORM_GUID}`,
-    {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields, context})});
+    {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("declare "+r.status);
 }
 
@@ -472,10 +503,11 @@ const declareEmail=document.getElementById("declareEmail");
 const declareError=document.getElementById("declareError");
 function setDeclareState(s){ declare.dataset.state=s; }
 
+if(REGULATED){ document.getElementById("declareConsent").hidden=false; document.getElementById("declarePrivacy").hidden=true; }
 document.getElementById("declareBtn").addEventListener("click", async()=>{
   declareError.hidden=true;
   setDeclareState("sending");
-  const hutk=await waitForHubspotCookie();
+  const hutk = REGULATED ? null : await waitForHubspotCookie();
   if(!hutk){
     // Unknown visitor: one email, framed as the delivery address for the links.
     setDeclareState("email");
@@ -483,8 +515,8 @@ document.getElementById("declareBtn").addEventListener("click", async()=>{
     return;
   }
   try{
-    await submitDeclare("", hutk);
-    emitCampaignEvent("patterns_declared",{identified:true, with_email:false});
+    await submitDeclare("", hutk, false);
+    emitCampaignEvent("patterns_declared",{identified:true, with_email:false, regime:REGIME});
     document.getElementById("declareLabel").textContent="Want the demo source and the guide by email?";
     document.getElementById("declareHint").textContent="Optional. One email with the links.";
     setDeclareState("done-ask-email");
@@ -505,8 +537,9 @@ document.getElementById("declareForm").addEventListener("submit", async(ev)=>{
   const wasIdentified=declare.dataset.state==="done-ask-email";
   setDeclareState("sending");
   try{
-    await submitDeclare(email, readHubspotCookie());
-    emitCampaignEvent("patterns_declared",{identified:wasIdentified, with_email:true});
+    const optIn = REGULATED ? document.getElementById("declareOptIn").checked : true;
+    await submitDeclare(email, readHubspotCookie(), optIn);
+    emitCampaignEvent("patterns_declared",{identified:wasIdentified, with_email:true, regime:REGIME, marketing_consent: REGULATED ? (optIn ? "granted" : "declined") : "not_required"});
     document.getElementById("declareDoneCopy").textContent="The demo source and the guide are on their way. The live demo above is the fastest way to go deeper in the meantime.";
     setDeclareState("done");
   }catch(e){
