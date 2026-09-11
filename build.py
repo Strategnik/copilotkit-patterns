@@ -116,7 +116,7 @@ def main() -> None:
     # assets
     for name in ("logo-full.svg", "logo-mark.svg"):
         shutil.copy(HERE / name, out / name)
-    for folder in ("icons", "anim", "product"):
+    for folder in ("icons", "anim", "product", "fonts"):
         (out / folder).mkdir(exist_ok=True)
         for f in (HERE / folder).iterdir():
             if f.is_file():
