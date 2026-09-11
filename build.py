@@ -59,8 +59,8 @@ MARQUEE_CSS = """/* works-with strips: the animation's own cards, scrolling, edg
 
 def marquee(asset: str) -> str:
     def row(cards: list[tuple[int, str]], cls: str, label: str) -> str:
-        imgs = "".join(f'<img src="{asset}anim/{n}.png" alt="{name}" loading="lazy">' for n, name in cards)
-        dup = "".join(f'<img src="{asset}anim/{n}.png" alt="" aria-hidden="true" loading="lazy">' for n, _ in cards)
+        imgs = "".join(f'<img src="{asset}anim/{n}.png" alt="{name}" width="348" height="187" loading="lazy">' for n, name in cards)
+        dup = "".join(f'<img src="{asset}anim/{n}.png" alt="" aria-hidden="true" width="348" height="187" loading="lazy">' for n, _ in cards)
         return (f'<div class="marquee-k">{label}</div>'
                 f'<div class="marquee {cls}" aria-label="{label}"><div class="marquee-track">{imgs}{dup}</div></div>')
     return ('<div class="marquee-wrap">' + row(AGENT_CARDS, "ltr", "any agent") + row(USER_CARDS, "rtl", "any user") + "</div>")
@@ -149,6 +149,7 @@ def main() -> None:
     tiles = "".join(tile(p, "", False) for p in patterns) + score_tile(False)
     (out / "index.html").write_text(
         render(idx_tpl, {"asset": "", "tiles_html": tiles, "engineer_url": data["engineer_url"],
+                         "github_url": data["github_url"], "agui_url": data["agui_url"], "dojo_url": data["dojo_url"],
                          "marquee_html": marquee(""), "marquee_css": MARQUEE_CSS})
     )
 
@@ -173,6 +174,7 @@ def main() -> None:
             "demo_label": html.escape(p["demo_label"]),
             "guide_url": p["guide_url"],
             "guide_label": html.escape(p["guide_label"]),
+            "source_url": p["source_url"],
             "code_file": html.escape(p["code_file"]),
             "code_html": highlight(p["code"]),
             "install": html.escape(data["install"]),

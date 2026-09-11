@@ -38,7 +38,8 @@
       ],
       "meta_title": "Shared state: one surface for agent and user | CopilotKit",
       "meta_desc": "Build agent-native apps where the agent reads and writes the same canvas your users work on. Live demo, code, and the guide.",
-      "use_case": "t1_agent_native_canvas"
+      "use_case": "t1_agent_native_canvas",
+      "source_url": "https://github.com/CopilotKit/CopilotKit/tree/main/showcase/integrations/langgraph-python/src/app/demos/shared-state-read-write"
     },
     {
       "slug": "generative-ui",
@@ -75,7 +76,8 @@
       ],
       "meta_title": "Generative UI: components, not paragraphs | CopilotKit",
       "meta_desc": "Render real components from agent tool calls instead of text walls. Three types of generative UI, one runtime. Live demo, code, and the guide.",
-      "use_case": "t2_generative_ui"
+      "use_case": "t2_generative_ui",
+      "source_url": "https://github.com/CopilotKit/CopilotKit/tree/main/showcase/integrations/langgraph-python/src/app/demos/gen-ui-tool-based"
     },
     {
       "slug": "multi-agent",
@@ -112,7 +114,8 @@
       ],
       "meta_title": "Multi-agent flows that stay coherent | CopilotKit",
       "meta_desc": "Route one conversation across specialized sub-agents without losing state or context. Live demo, code, and the guide.",
-      "use_case": "t3_multi_agent"
+      "use_case": "t3_multi_agent",
+      "source_url": "https://github.com/CopilotKit/CopilotKit/tree/main/showcase/integrations/langgraph-python/src/app/demos/subagents"
     },
     {
       "slug": "channels",
@@ -149,7 +152,8 @@
       ],
       "meta_title": "One agent, every channel: ship to Slack | CopilotKit",
       "meta_desc": "Take the in-app agent you already built to Slack, Teams, and beyond with Channels. Try it live, see the code, read the guide.",
-      "use_case": "t4_agents_in_chat"
+      "use_case": "t4_agents_in_chat",
+      "source_url": "https://github.com/CopilotKit/CopilotKit/tree/main/examples/slack"
     },
     {
       "slug": "human-in-the-loop",
@@ -186,12 +190,16 @@
       ],
       "meta_title": "Copilots that act, with approval | CopilotKit",
       "meta_desc": "Human-in-the-loop by default: the agent proposes, your user approves. Live demo, code, and the guide for building copilots that act inside workflows.",
-      "use_case": "t5_vertical_lob"
+      "use_case": "t5_vertical_lob",
+      "source_url": "https://github.com/CopilotKit/CopilotKit/tree/main/showcase/integrations/langgraph-python/src/app/demos/hitl-in-app"
     }
   ],
   "scorecard": {
     "idx": "06",
     "card_title": "Production readiness, scored.",
     "card_desc": "Fourteen questions, five bottlenecks, one thing to fix first."
-  }
+  },
+  "github_url": "https://github.com/CopilotKit/CopilotKit",
+  "agui_url": "https://docs.ag-ui.com/introduction",
+  "dojo_url": "https://dojo.showcase.copilotkit.ai/"
 }
