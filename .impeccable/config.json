@@ -20,6 +20,21 @@
         "value": "0 0 10px #fff",
         "createdAt": "2026-09-11T16:55:39.578Z",
         "reason": "white pulse dot travelling the links in the dark multi-agent mini-demo scene, carried over verbatim from CopilotKit's shipped what-are-you-building campaign page"
+      },
+      {
+        "rule": "overused-font",
+        "value": "plus jakarta sans",
+        "createdAt": "2026-09-11T18:57:01.176Z",
+        "reason": "CopilotKit brand rule (internal-skills copilotkit-branding, Verified): primary font is Plus Jakarta Sans; client brand overrides the aesthetic lane"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "/Users/nicktalbert/Projects/copilotkit/patterns/template.html"
+        ],
+        "createdAt": "2026-09-11T18:57:01.208Z",
+        "reason": "the grid is the literal canvas surface inside the shared-state mini demo (pattern = agent-native canvas), carried over from CopilotKit's shipped what-are-you-building page"
       }
     ]
   }
