@@ -1,0 +1,197 @@
+{
+  "install": "npm install @copilotkit/react-core @copilotkit/runtime",
+  "scorecard_url": "https://www.copilotkit.ai/scorecard",
+  "engineer_url": "https://www.copilotkit.ai/talk-to-an-engineer",
+  "patterns": [
+    {
+      "slug": "shared-state",
+      "key": "c1",
+      "idx": "01",
+      "icon": "t1",
+      "scene": "sc1",
+      "nav_title": "Shared state",
+      "card_title": "One surface. Agent and user, same state.",
+      "card_desc": "The agent reads and writes the same canvas your users work on.",
+      "h1_pre": "One surface. ",
+      "h1_accent": "Agent and user, same state.",
+      "h1_post": "",
+      "sub": "Chat is an input, not the product. Shared state lets your agent read and write the same surface your users work on. Sidebar chatbots summarize. Agent-native apps act — same canvas, same state, human in the loop.",
+      "demo_url": "https://dojo.showcase.copilotkit.ai/?integration=langgraph-python&demo=shared-state-read-write",
+      "demo_label": "Open the live demo",
+      "guide_url": "https://docs.copilotkit.ai/shared-state",
+      "guide_label": "Read the shared-state guide",
+      "code_file": "app/page.tsx",
+      "code": "import { useAgent, UseAgentUpdate } from \"@copilotkit/react-core/v2\";\n\nconst { agent } = useAgent({\n  agentId: \"shared-state-read-write\",\n  updates: [UseAgentUpdate.OnStateChanged],\n});\n\n// READ — the UI re-renders whenever the agent writes state\nconst notes = agent.state?.notes ?? [];\n\n// WRITE — every edit in your UI lands in agent state\nagent.setState({ preferences: next, notes });",
+      "steps": [
+        [
+          "Subscribe",
+          "useAgent hands you the agent and re-renders your components on every state change it emits."
+        ],
+        [
+          "Read",
+          "Render from agent.state like any other prop. Notes the agent writes show up in your panels, not in a chat bubble."
+        ],
+        [
+          "Write",
+          "Call agent.setState from your UI. On its next turn the agent reads it back — your users steer the model without typing."
+        ]
+      ],
+      "meta_title": "Shared state: one surface for agent and user | CopilotKit",
+      "meta_desc": "Build agent-native apps where the agent reads and writes the same canvas your users work on. Live demo, code, and the guide.",
+      "use_case": "t1_agent_native_canvas"
+    },
+    {
+      "slug": "generative-ui",
+      "key": "c2",
+      "idx": "02",
+      "icon": "t2",
+      "scene": "sc2",
+      "nav_title": "Generative UI",
+      "card_title": "Generative UI: components, not paragraphs.",
+      "card_desc": "Agents render real components from tool calls — whatever the moment needs.",
+      "h1_pre": "Generative UI: ",
+      "h1_accent": "components, not paragraphs.",
+      "h1_post": "",
+      "sub": "Text walls are where agent UX goes to die. Render real components from tool calls instead. Controlled, declarative, or open-ended — three types of generative UI, one runtime, driven by your design system.",
+      "demo_url": "https://dojo.showcase.copilotkit.ai/?integration=langgraph-python&demo=gen-ui-tool-based",
+      "demo_label": "Open the live demo",
+      "guide_url": "https://docs.copilotkit.ai/generative-ui/tool-based",
+      "guide_label": "Read the generative UI guide",
+      "code_file": "app/page.tsx",
+      "code": "import { useComponent } from \"@copilotkit/react-core/v2\";\n\nuseComponent({\n  name: \"render_bar_chart\",\n  description: \"Display a bar chart with labeled numeric values.\",\n  parameters: barChartPropsSchema, // zod — validated before it renders\n  render: BarChart,                // ordinary React, knows nothing about agents\n});",
+      "steps": [
+        [
+          "Register",
+          "useComponent takes a name, a Zod schema for the props, and the component. The runtime exposes it to the agent as a tool."
+        ],
+        [
+          "Let the agent choose",
+          "When the user asks for a chart, the model picks render_bar_chart and streams the payload in."
+        ],
+        [
+          "Render",
+          "Zod validates the arguments, then your component renders inline — and can update as the payload fills."
+        ]
+      ],
+      "meta_title": "Generative UI: components, not paragraphs | CopilotKit",
+      "meta_desc": "Render real components from agent tool calls instead of text walls. Three types of generative UI, one runtime. Live demo, code, and the guide.",
+      "use_case": "t2_generative_ui"
+    },
+    {
+      "slug": "multi-agent",
+      "key": "c3",
+      "idx": "03",
+      "icon": "t3",
+      "scene": "sc3",
+      "nav_title": "Multi-agent",
+      "card_title": "Multi-agent flows that stay coherent.",
+      "card_desc": "Specialized sub-agents behind one UI — handoffs, interrupts, shared state.",
+      "h1_pre": "Multi-agent flows that ",
+      "h1_accent": "stay coherent.",
+      "h1_post": "",
+      "sub": "Route one conversation across specialized sub-agents without losing state or context. Orchestrate them behind one UI — handoffs, interrupts, and shared state included — and show your users who is doing what.",
+      "demo_url": "https://dojo.showcase.copilotkit.ai/?integration=langgraph-python&demo=subagents",
+      "demo_label": "Open the live demo",
+      "guide_url": "https://docs.copilotkit.ai/multi-agent/subagents",
+      "guide_label": "Read the sub-agents guide",
+      "code_file": "app/page.tsx",
+      "code": "import { useRenderTool } from \"@copilotkit/react-core/v2\";\nimport { z } from \"zod\";\n\nuseRenderTool({\n  name: \"research_agent\",\n  parameters: z.object({ task: z.string() }),\n  render: ({ parameters, status, result }) => (\n    <SubAgentActivityCard\n      subAgent=\"research_agent\"\n      task={parameters?.task}\n      status={status} // inProgress → executing → complete\n      result={result}\n    />\n  ),\n}, []);",
+      "steps": [
+        [
+          "One supervisor",
+          "A supervisor agent owns the conversation and delegates to research, writing, or any sub-agent as tool calls."
+        ],
+        [
+          "One renderer per sub-agent",
+          "useRenderTool surfaces each delegation inline — the user sees which agent is running which task."
+        ],
+        [
+          "One state",
+          "Delegations, interrupts, and results live in shared state, so nothing is lost between handoffs."
+        ]
+      ],
+      "meta_title": "Multi-agent flows that stay coherent | CopilotKit",
+      "meta_desc": "Route one conversation across specialized sub-agents without losing state or context. Live demo, code, and the guide.",
+      "use_case": "t3_multi_agent"
+    },
+    {
+      "slug": "channels",
+      "key": "c4",
+      "idx": "04",
+      "icon": "t4",
+      "scene": "sc4",
+      "nav_title": "Channels",
+      "card_title": "One agent. Every channel.",
+      "card_desc": "Ship the agent you already built to Slack, Teams, and beyond.",
+      "h1_pre": "One agent. ",
+      "h1_accent": "Every channel.",
+      "h1_post": "",
+      "sub": "Same agent, new channels. Don't rebuild the agent for every surface — Channels take the in-app agent you already built to Slack and beyond, where your users already work: threads, mentions, actions.",
+      "demo_url": "https://www.copilotkit.ai/try-channels",
+      "demo_label": "Try Channels",
+      "guide_url": "https://docs.copilotkit.ai/slack",
+      "guide_label": "Read the Slack guide",
+      "code_file": "channel.ts",
+      "code": "const channel = createChannel({\n  name: required(\"CHANNEL_CODE\"),\n  identifyUser: \"platform\",\n  agent: makeAgent,      // the agent you already built\n  showToolStatus: true,  // tool progress shows in the thread\n});",
+      "steps": [
+        [
+          "Keep the agent",
+          "makeAgent returns the same agent that powers your app — one per thread, so conversations never mix."
+        ],
+        [
+          "Connect the channel",
+          "createChannel binds it to a Slack app through Intelligence. Credentials and provider routing stay out of your code."
+        ],
+        [
+          "Ship where users are",
+          "Mentions, threads, and interactive approvals work in-channel, with tool status visible as it runs."
+        ]
+      ],
+      "meta_title": "One agent, every channel: ship to Slack | CopilotKit",
+      "meta_desc": "Take the in-app agent you already built to Slack, Teams, and beyond with Channels. Try it live, see the code, read the guide.",
+      "use_case": "t4_agents_in_chat"
+    },
+    {
+      "slug": "human-in-the-loop",
+      "key": "c5",
+      "idx": "05",
+      "icon": "t5",
+      "scene": "sc5",
+      "nav_title": "Human in the loop",
+      "card_title": "Copilots that act — with approval.",
+      "card_desc": "The agent proposes, your user approves. Guardrails and an audit trail by default.",
+      "h1_pre": "Copilots that act — ",
+      "h1_accent": "with approval.",
+      "h1_post": "",
+      "sub": "LOB copilots earn trust with human-in-the-loop approval: the agent proposes, your user approves. Human-in-the-loop by default means the agent does the work inside your workflows, and your user stays in control.",
+      "demo_url": "https://dojo.showcase.copilotkit.ai/?integration=langgraph-python&demo=hitl-in-app",
+      "demo_label": "Open the live demo",
+      "guide_url": "https://docs.copilotkit.ai/human-in-the-loop",
+      "guide_label": "Read the human-in-the-loop guide",
+      "code_file": "app/page.tsx",
+      "code": "import { useFrontendTool } from \"@copilotkit/react-core/v2\";\nimport { z } from \"zod\";\n\nuseFrontendTool({\n  name: \"request_user_approval\",\n  description: \"Ask the operator to approve or reject an action.\",\n  parameters: z.object({ message: z.string(), context: z.string().optional() }),\n  handler: ({ message, context }) =>\n    // resolves when the operator clicks Approve or Reject in your modal\n    new Promise<{ approved: boolean; reason?: string }>((resolve) =>\n      setDialog({ open: true, pending: { message, context }, resolve }),\n    ),\n});",
+      "steps": [
+        [
+          "The agent proposes",
+          "Before a consequential action it calls request_user_approval with the concrete numbers and IDs."
+        ],
+        [
+          "Your UI decides",
+          "The handler returns a Promise. Your modal, outside the chat, resolves it with Approve or Reject."
+        ],
+        [
+          "The agent continues",
+          "The decision comes back as the tool result. Approved actions run; rejected ones stop, with the reason on record."
+        ]
+      ],
+      "meta_title": "Copilots that act, with approval | CopilotKit",
+      "meta_desc": "Human-in-the-loop by default: the agent proposes, your user approves. Live demo, code, and the guide for building copilots that act inside workflows.",
+      "use_case": "t5_vertical_lob"
+    }
+  ],
+  "scorecard": {
+    "idx": "06",
+    "card_title": "Production readiness, scored.",
+    "card_desc": "Fourteen questions, five bottlenecks, one thing to fix first."
+  }
+}
