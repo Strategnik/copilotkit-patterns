@@ -8,6 +8,12 @@
         "value": "0 0 14px var(--lilac)",
         "createdAt": "2026-09-10T23:07:46.240Z",
         "reason": "cursor-dot glow inside the dark mini-demo scene, carried over verbatim from CopilotKit's shipped what-are-you-building campaign page (their approved brand asset)"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "0 0 14px rgba(190,194,255,.8)",
+        "createdAt": "2026-09-11T16:49:36.741Z",
+        "reason": "node glow inside the dark multi-agent mini-demo scene, carried over verbatim from CopilotKit's shipped what-are-you-building campaign page (their approved brand asset)"
       }
     ]
   }

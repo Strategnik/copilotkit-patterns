@@ -77,6 +77,21 @@
   .pill:focus-visible,.copy:focus-visible,.tile:focus-visible,a:focus-visible{outline:3px solid var(--text-primary);outline-offset:2px}
   .pill svg{width:16px;height:16px}
 
+  /* orientation for cold traffic — one line under the CTAs, one section below the hero */
+  .orient{margin-top:22px;padding:12px 16px;border-left:3px solid var(--lilac);background:var(--surface-container);border-radius:0 12px 12px 0;font-size:14px;line-height:1.55;color:var(--text-secondary);max-width:560px}
+  .orient b{color:var(--text-primary);font-weight:600}
+  .orient a{color:var(--text-primary);font-weight:600;text-decoration:none;white-space:nowrap}
+  .orient a:hover{text-decoration:underline}
+  .what{background:var(--surface-container);border:1px solid var(--line);border-radius:20px;padding:26px 28px;box-shadow:var(--elevation-sm)}
+  .what-lead{max-width:640px;margin-bottom:20px}
+  .what-lead h2{font-size:24px;font-weight:600;letter-spacing:-.015em;margin-bottom:8px}
+  .what-lead p{font-size:15.5px;color:var(--text-secondary);line-height:1.6}
+  .what-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .what-card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fafafc}
+  .what-card .k{font-family:var(--mono);font-size:11px;font-weight:500;color:#6430AB;text-transform:lowercase;margin-bottom:8px}
+  .what-card h3{font-size:15px;font-weight:600;margin-bottom:6px}
+  .what-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.55}
+  @media (max-width:860px){.what-grid{grid-template-columns:1fr}}
   /* scene panel — the same little machines as the "what are you building" tiles */
   .panel{position:relative;container-type:size;aspect-ratio:4/3;border-radius:20px;overflow:hidden;box-shadow:var(--elevation-lg);
     background:radial-gradient(360px 200px at 78% 18%, rgba(190,194,255,.30), transparent 70%),linear-gradient(120deg,#010507 0%,#2b2b2b 55%,#010507 100%);
@@ -250,10 +265,26 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
         <a class="pill ghost" href="{{guide_url}}" target="_blank" rel="noopener" data-cta="guide">{{guide_label}}</a>
       </div>
+      <p class="orient"><b>New to CopilotKit?</b> It's the open-source frontend stack for AI agents: you bring the agent, CopilotKit connects it to the people using your app. This page shows one of the five patterns it makes possible. <a href="#what" data-nav="what">What it is, in 30 seconds ↓</a></p>
     </div>
     <div class="panel" aria-hidden="true">
       <span class="tag">{{slug}} · live</span>
       <span class="scene {{scene}}">{{scene_html}}</span>
+    </div>
+  </section>
+
+  <section id="what" aria-labelledby="what-title">
+    <div class="seclabel"><span id="what-title">What CopilotKit is</span><i></i></div>
+    <div class="what">
+      <div class="what-lead">
+        <h2>Connect any agent to any user.</h2>
+        <p>CopilotKit is the open-source frontend stack for AI agents. Teams use it to put an agent to work inside a real product — not in a chat window next to it. The agent reads what the user sees, renders real components, asks before it acts, and ships to Slack or Teams when that's where the work happens.</p>
+      </div>
+      <div class="what-grid">
+        <div class="what-card"><div class="k">01 · Bring your agent</div><h3>Any framework</h3><p>LangGraph, CrewAI, Mastra, Pydantic AI, Google ADK, Claude SDK, Agno, LlamaIndex, Strands, or your own. CopilotKit speaks AG-UI, the open protocol it created, so the agent side stays yours.</p></div>
+        <div class="what-card"><div class="k">02 · Connect it to users</div><h3>Any frontend</h3><p>React, Angular, mobile, Slack, and Teams. Hooks and components for shared state, generative UI, frontend tools, and human-in-the-loop approvals — the pattern on this page is one of them.</p></div>
+        <div class="what-card"><div class="k">03 · Ship it safely</div><h3>Production-ready runtime</h3><p>Streaming, concurrency, retries, and state sync handled by the runtime. Open source with 37,000+ GitHub stars; a hosted runtime and enterprise support when you need them.</p></div>
+      </div>
     </div>
   </section>
 
