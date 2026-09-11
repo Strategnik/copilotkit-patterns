@@ -46,16 +46,13 @@
   .sub b{color:var(--text-primary);font-weight:600}
   .proof{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--text-secondary);margin-top:-16px;margin-bottom:12px}
   .proof b{color:var(--text-primary);font-weight:600}
-  /* the homepage hero animation: agent frameworks → CopilotKit / AG-UI → user channels */
-  .anim{position:relative;aspect-ratio:64/45;width:100%;min-width:0;overflow:hidden}
-  .anim .poster,.anim .lottie{position:absolute;left:-11%;top:-22%;width:122%;aspect-ratio:1/1;height:auto}
-  .anim .poster{object-fit:contain;transition:opacity .25s ease}
-  .anim .lottie{height:100%}
-  .anim.ready .poster{opacity:0}
+  /* product shot: a short loop of the generative-UI demo, framed like a window */
+  .shot{margin:0;min-width:0}
+  .shot-video,.shot img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--line);box-shadow:var(--elevation-lg);background:var(--surface-container)}
+  .shot figcaption{margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--text-secondary);text-transform:lowercase}
   {{marquee_css}}
   .marquee-wrap{margin:0 0 36px}
-  @media (max-width:760px){.hero{grid-template-columns:1fr}.anim{order:-1;aspect-ratio:1/1}.anim .poster,.anim .lottie{left:-8%;top:-8%;width:116%}}
-  @media (prefers-reduced-motion: reduce){.anim .lottie{display:none}.anim.ready .poster{opacity:1}}
+  @media (max-width:760px){.hero{grid-template-columns:1fr}.shot{order:-1}}
   .seclabel{display:flex;align-items:center;gap:8px;padding:0 4px;margin-bottom:12px}
   .seclabel span{font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);white-space:nowrap}
   .seclabel i{flex:1;height:1px;background:var(--border-container)}
@@ -110,10 +107,13 @@
       <p class="sub"><b>New here?</b> CopilotKit is the open-source frontend stack for AI agents: bring any agent, connect it to any user, inside your product. Each pattern below is a live demo, the code, and the guide.</p>
       <div class="proof"><span><b>37,000+</b> GitHub stars</span><span>Makers of <b>AG-UI</b></span><span>Open source</span></div>
     </div>
-    <div class="anim" role="img" aria-label="CopilotKit and AG-UI connecting AI agent frameworks to user channels">
-      <img class="poster" src="anim/poster.png" alt="" width="1024" height="1024">
-      <div class="lottie" id="heroAnim" aria-hidden="true"></div>
-    </div>
+    <figure class="shot">
+      <video class="shot-video" autoplay muted loop playsinline preload="metadata" poster="product/gallery-demo-poster.jpg" aria-label="CopilotKit demo: an agent rendering real components inside an app">
+        <source src="product/gallery-demo.webm" type="video/webm">
+        <source src="product/gallery-demo.mp4" type="video/mp4">
+      </video>
+      <figcaption>Generative UI, live: the agent answers with components, not paragraphs.</figcaption>
+    </figure>
   </section>
 
   {{marquee_html}}
@@ -142,16 +142,12 @@
   </a>
 </nav>
 
-<script src="vendor/lottie_svg.min.js"></script>
 <script>
-/* Hero animation — the copilotkit.ai homepage Lottie, self-hosted; poster stays if it can't run. */
+/* Demo loop: respect reduced motion (poster only) and don't run while off screen. */
 (function(){
-  const el=document.getElementById("heroAnim");
-  const reduce=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(!el || !window.lottie || reduce) return;
-  const a=window.lottie.loadAnimation({container:el, renderer:"svg", loop:true, autoplay:true, path:"anim/hero-animation.json", assetsPath:"anim/", rendererSettings:{preserveAspectRatio:"xMidYMid meet", progressiveLoad:false}});
-  a.addEventListener("DOMLoaded", ()=>el.parentElement.classList.add("ready"));
-  if("IntersectionObserver" in window){ new IntersectionObserver(([e])=>{ e.isIntersecting ? a.play() : a.pause(); }).observe(el); }
+  const v=document.querySelector(".shot-video"); if(!v) return;
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){ v.removeAttribute("autoplay"); v.pause(); return; }
+  if("IntersectionObserver" in window){ new IntersectionObserver(([e])=>{ e.isIntersecting ? v.play().catch(()=>{}) : v.pause(); }).observe(v); }
 })();
 /* Measurement bridge — see template.html for the event contract. */
 const PATTERN = "index";

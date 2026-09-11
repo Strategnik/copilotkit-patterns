@@ -95,18 +95,13 @@
   .what-card p b{color:var(--text-primary);font-weight:600}
   /* what-top: lead + logos on the left, the homepage hero animation on the right */
   .what-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);gap:clamp(18px,3vw,36px);align-items:center;margin-bottom:18px}
-  .what-top .anim{aspect-ratio:5/4}
-  .what-top .anim .poster,.what-top .anim .lottie{width:118%;left:-9%;top:-16%}
   .what-top .what-lead{margin-bottom:0}
   {{marquee_css}}
   .marquee-wrap{margin:0 0 22px}
-  .anim{position:relative;aspect-ratio:64/45;width:100%;min-width:0;overflow:hidden}
-  .anim .poster,.anim .lottie{position:absolute;left:-11%;top:-22%;width:122%;aspect-ratio:1/1;height:auto}
-  .anim .poster{object-fit:contain;transition:opacity .25s ease}
-  .anim .lottie{height:100%}
-  .anim.ready .poster{opacity:0}
-  @media (max-width:860px){.what-top{grid-template-columns:1fr}.anim{aspect-ratio:1/1}.anim .poster,.anim .lottie{left:-8%;top:-8%;width:116%}}
-  @media (prefers-reduced-motion: reduce){.anim .lottie{display:none}.anim.ready .poster{opacity:1}}
+  /* product shot from copilotkit.ai for this pattern */
+  .shot{margin:0;min-width:0}
+  .shot img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:var(--elevation-lg);background:var(--surface-container)}
+  @media (max-width:860px){.what-top{grid-template-columns:1fr}}
   /* scene panel — the same little machines as the "what are you building" tiles */
   .panel{position:relative;container-type:size;aspect-ratio:4/3;border-radius:20px;overflow:hidden;box-shadow:var(--elevation-lg);
     background:radial-gradient(360px 200px at 78% 18%, rgba(190,194,255,.30), transparent 70%),linear-gradient(120deg,#010507 0%,#2b2b2b 55%,#010507 100%);
@@ -298,10 +293,9 @@
           <h2>Connect any agent to any user.</h2>
           <p>CopilotKit is the open-source frontend stack for AI agents: it puts an agent to work inside a real product, not in a chat window next to it. Bring the agent you have; reach the people where they already are.</p>
         </div>
-        <div class="anim" role="img" aria-label="CopilotKit and AG-UI connecting AI agent frameworks to user channels">
-          <img class="poster" src="{{asset}}anim/poster.png" alt="" width="1024" height="1024">
-          <div class="lottie" id="heroAnim" aria-hidden="true"></div>
-        </div>
+        <figure class="shot">
+          <img src="{{asset}}{{visual}}" alt="{{visual_alt}}" loading="lazy">
+        </figure>
       </div>
 
       {{marquee_html}}
@@ -395,18 +389,6 @@
   </a>
 </nav>
 
-<script src="{{asset}}vendor/lottie_svg.min.js"></script>
-<script>
-/* Hero animation — the copilotkit.ai homepage Lottie, self-hosted; poster stays if it can't run. */
-(function(){
-  const el=document.getElementById("heroAnim");
-  const reduce=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(!el || !window.lottie || reduce) return;
-  const a=window.lottie.loadAnimation({container:el, renderer:"svg", loop:true, autoplay:true, path:"{{asset}}anim/hero-animation.json", assetsPath:"{{asset}}anim/", rendererSettings:{preserveAspectRatio:"xMidYMid meet", progressiveLoad:false}});
-  a.addEventListener("DOMLoaded", ()=>el.parentElement.classList.add("ready"));
-  if("IntersectionObserver" in window){ new IntersectionObserver(([e])=>{ e.isIntersecting ? a.play() : a.pause(); }).observe(el); }
-})();
-</script>
 <script>
 /* ============================================================
    Measurement bridge. This page never loads analytics itself. Every event
